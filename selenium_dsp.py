@@ -64,11 +64,8 @@ def add_object(obj_name, obj_desc, obj_comm):
         print("Add button not found")
 
 
-<<<<<<< Updated upstream
-with open('csv_objects.csv', 'r') as f:
-=======
+
 with open('test_object.csv', 'r') as f:
->>>>>>> Stashed changes
     lines = csv.reader(f, delimiter='\t')
     for line in lines:
         add_object(line[1], line[2], line[3])
