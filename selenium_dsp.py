@@ -1,9 +1,10 @@
 import time
+import csv
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import NoSuchElementException
 
 ## Initiating Chrome WebDrive
 driver = webdriver.Chrome(r'C:\WebDrivers\chromedriver.exe')
@@ -45,18 +46,26 @@ objects = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.XP
 objects.click()
 
 # Clicking 'Add' object button
-try:
-    time.sleep(2)
-    add_object_button = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div[3]/div/div[2]/div[2]/div[1]/div[2]/div/div/span')
-    add_object_button.click()
-    object_name = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="detailWID_1151685457_ObjectsDetail"]/div[2]/table/tbody/tr[2]/td[2]/input')))
-    object_descriptioin = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="detailWID_1151685457_ObjectsDetail"]/div[2]/table/tbody/tr[3]/td[2]/input')))
-    object_comment = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="detailWID_1151685457_ObjectsDetail"]/div[2]/table/tbody/tr[5]/td[2]/input')))
-    object_name.send_keys('EAM-AAAA')
-    object_descriptioin.send_keys('EAM AAAA Test')
-    object_comment.send_keys('EAM AAAA Comment')
-    driver.find_element_by_xpath('//*[@id="Save"]/div/span').click()
-    edit = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, 'Edit')))
-    driver.find_element_by_xpath('/html/body/div[1]/div[2]/div[4]/div/div[1]/div[1]/span[1]').click()
-except Exception:
-    print("Add button not found")
+def add_object(obj_name, obj_desc, obj_comm):
+    try:
+        time.sleep(2)
+        add_object_button = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div[3]/div/div[2]/div[2]/div[1]/div[2]/div/div/span')
+        add_object_button.click()
+        object_name = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="detailWID_1151685457_ObjectsDetail"]/div[2]/table/tbody/tr[2]/td[2]/input')))
+        object_descriptioin = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="detailWID_1151685457_ObjectsDetail"]/div[2]/table/tbody/tr[3]/td[2]/input')))
+        object_comment = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="detailWID_1151685457_ObjectsDetail"]/div[2]/table/tbody/tr[5]/td[2]/input')))
+        object_name.send_keys(obj_name)
+        object_descriptioin.send_keys(obj_desc)
+        object_comment.send_keys(obj_comm)
+        driver.find_element_by_xpath('//*[@id="Save"]/div/span').click()
+        edit = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, 'Edit')))
+        driver.find_element_by_xpath('/html/body/div[1]/div[2]/div[4]/div/div[1]/div[1]/span[1]').click()
+    except NoSuchElementException:
+        print("Add button not found")
+
+
+with open('csv_objects.csv', 'r') as f:
+    lines = csv.reader(f, delimiter='\t')
+    for line in lines:
+        add_object(line[1], line[2], line[3])
+
