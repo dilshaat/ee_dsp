@@ -8,7 +8,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 
 ## Initiating Chrome WebDrive
-driver = webdriver.Chrome(r'C:\WebDrivers\chromedriver.exe')
+driver = webdriver.Firefox()
 # Give the URL or IP address of your website below
 driver.get('http://10.1.1.225/dsp/Virtual.aspx')
 # WebDrive will wait max 30 seconds and periodically polls the DOM to find the elements requested
@@ -48,20 +48,21 @@ def associate_object_pa(name, priority, comment):
     choose_input.click()
     choose_input.send_keys(name)
     time.sleep(1)
-    choose_input.send_keys(Keys.ENTER)
+    driver.find_element_by_tag_name('body').send_keys(Keys.ENTER)
     priority_input = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div[3]/div/div[3]/div[2]/div[2]/div/div[2]/table/tbody/tr[1]/td[5]/input')
     priority_input.send_keys(priority)
     comment_input = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div[3]/div/div[3]/div[2]/div[2]/div/div[2]/table/tbody/tr[2]/td/input')
     comment_input.send_keys(comment)
-    time.sleep(1)
     save_obj_button = driver.find_element_by_xpath('//*[@id="Save"]/div/span')
     save_obj_button.click()
+    time.sleep(1)
     data_source_id = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.XPATH, '/html/body/div[1]/div[2]/div[4]/div/div[2]/div[2]/table/tbody/tr[3]/td[2]/div/a/span')))
     report_data_source_id_text = data_source_id.text
     print(report_data_source_id_text)
     report_id_input = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div[4]/div/div[2]/div[2]/table/tbody/tr[4]/td[2]/div/input')
     report_id_input.send_keys(report_data_source_id_text)
-    driver.find_element_by_xpath('/html/body/div[9]/div[1]/input').send_keys(Keys.ENTER)
+    time.sleep(1)
+    driver.find_elements_by_tag_name('li')[1].click()
     save_vertical = driver.find_element_by_xpath('/html/body/div[1]/div[2]/div[4]/div/div[1]/div[2]/div[1]/div/span')
     save_vertical.click()
     time.sleep(1)
